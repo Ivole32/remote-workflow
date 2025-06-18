@@ -10,10 +10,9 @@ Easily configurable through a **clean UI**, **command line**, or **text editor**
 
 - 🔒 **Secure SSH-based file sharing** from Windows to a remote Linux system
 - 🧠 **Custom command workflows** for automating tasks on the Linux side
-- 🧰 **Prebuilt presets** for common workflows (build, deploy, backup, etc.)
+- 🧰 **Prebuilt presets** for common workflows (build, deploy, backup, compile, etc.)
 - 🖥️ **Simple UI** for managing connections and workflows
 - 📝 **YAML/JSON-based config files** for advanced users
-- 🔄 Works seamlessly with VS Code, Git Bash, or native CMD
 
 ---
 
@@ -21,7 +20,7 @@ Easily configurable through a **clean UI**, **command line**, or **text editor**
 
 You're working on code or content on your Windows PC and want to:
 
-- Sync it with a Linux server
+- Sync files with a Linux server
   - Easy file sharing
   - Workflows for compiling and other stuff like that
 - Run tests, builds, or deployment scripts
