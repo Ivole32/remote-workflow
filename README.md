@@ -25,3 +25,5 @@ You're working on code or content on your Windows PC and want to:
   - Workflows for compiling and other stuff like that
 - Run tests, builds, or deployment scripts
 - Do it all securely and repeatably
+
+(I used AI to get a better understanding of how the installation process should work, improve my texts, and help plan my next development steps.)
