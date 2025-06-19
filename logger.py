@@ -2,7 +2,6 @@
 The main file for the custom logger
 """
 import sys
-from config import Configuration as config
 
 class Colors:
     """
@@ -18,9 +17,9 @@ class Logger:
     """
     The main class for the custom logger
     """
-    def __init__(self, stream=sys.stdout) -> None:
+    def __init__(self, debug_mode=True, stream=sys.stdout) -> None:
         self.__stream = stream
-        self.debug_mode = config().get_debug_mode()
+        self.debug_mode = debug_mode
 
     def info(self, message: str) -> None:
         if self.debug_mode:
@@ -36,6 +35,6 @@ class Logger:
     def error(self, message: str) -> None:
         self._print_colored("[ERROR]", message, Colors.ERROR)
 
-    def _print_colored(self, prefix: str, message: str, color: str):
+    def _print_colored(self, prefix: str, message: str, color: str) -> None:
         self.__stream.write(f"{color}{prefix}{Colors.RESET} {message}\n")
         self.__stream.flush()
