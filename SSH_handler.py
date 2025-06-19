@@ -1,5 +1,6 @@
 import subprocess
 import os
+import shutil
 from logger import Logger
 from config import Configuration
 
@@ -15,15 +16,29 @@ class SSH_Handler():
         self.ssh_user = config.get_config_value(value="ssh-user", return_type=str)[1]
         self.pub_key_file = os.path.join(self.ssh_dir, f"{self.ssh_key_name}.pub")
 
-    def generate_SSH_Key(self) -> None:
-        logger.info("Generating SSH key pair...")
-        if not os.path.exists(self.ssh_dir):
-            logger.info("'.ssh' directory not found. Creating it now...")
-            os.makedirs(self.ssh_dir)
-        logger.info("Creating SSH key pair...")
-        key_path = os.path.join(self.ssh_dir, self.ssh_key_name)
-        os.system(rf'ssh-keygen -t rsa -b 4096 -f "{key_path}" -N ""')
-        logger.ok("SSH key pair created successfully.")
+    def generate_SSH_Key(self, overwrite=False) -> None:
+        if overwrite == True:
+            logger.info("Deleting old SSH keys if there are some")
+            shutil.rmtree(self.ssh_dir)
+            logger.info("Generating new SSH key pair...")
+            if not os.path.exists(self.ssh_dir):
+                logger.info("'.ssh' directory not found. Creating it now...")
+                os.makedirs(self.ssh_dir)
+            logger.info("Creating SSH key pair...")
+            key_path = os.path.join(self.ssh_dir, self.ssh_key_name)
+            os.system(rf'ssh-keygen -t rsa -b 4096 -f "{key_path}" -N ""')
+            logger.ok("SSH key pair created successfully.")
+        if overwrite == False:
+            if not os.path.exists(self.ssh_dir):
+                logger.info("'.ssh' directory not found. Creating it now...")
+                os.makedirs(self.ssh_dir)
+            if not os.path.isfile(self.pub_key_file):
+                logger.info("Generating SSH key pair...")
+                key_path = os.path.join(self.ssh_dir, self.ssh_key_name)
+                os.system(rf'ssh-keygen -t rsa -b 4096 -f "{key_path}" -N ""')
+                logger.ok("SSH key pair created successfully.")
+            else:
+                logger.info("Key files are already there. Use 'overwrite=True' to overwrite them...")
 
     def copy_SSH_key(self) -> None:
         with open(self.pub_key_file, "r") as f:
@@ -54,8 +69,11 @@ class SSH_Handler():
         username = os.getlogin()
         logger.info(f"Fixing windows key permissions: {ssh_file} (User: {username})")
 
-        subprocess.run(["icacls", ssh_file, "/inheritance:r"], check=True)
-        subprocess.run(["icacls", ssh_file, "/grant:r", f"{username}:(R)"], check=True)
+        try:
+            subprocess.run(["icacls", ssh_file, "/inheritance:r"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["icacls", ssh_file, "/grant:r", f"{username}:(R)"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception as e:
+            logger.error(f"Windows key perminissions could not be fixed: {e}")
 
     def test_SSH_without_password(self) -> bool:
         ssh_file = os.path.join(self.ssh_dir, self.ssh_key_name)
@@ -81,10 +99,10 @@ class SSH_Handler():
 
 if __name__ == "__main__":
     handler = SSH_Handler()
-    handler.generate_SSH_Key()
+    handler.generate_SSH_Key(overwrite=False)
     while True:
         if handler.test_SSH_without_password():
-            print("OK")
+            logger.ok("SSH connection OK")
             break
         else:
             handler.copy_SSH_key()

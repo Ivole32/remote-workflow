@@ -22,7 +22,7 @@ class Configuration:
             "ssh-ip": "Linux Server Ip",
             "ssh-port": 22,
             "ssh-file": r".\.ssh",
-            "ssh-key-name": "id_rsa" 
+            "ssh-key-name": "id_rsa"
         }
 
         self.logger.info("Checking for existence of config.ini")
