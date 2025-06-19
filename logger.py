@@ -30,7 +30,6 @@ class Logger:
                 return True
         except Exception:
             return True
-
         
     def info(self, message: str) -> None:
         if self.debug_mode:
