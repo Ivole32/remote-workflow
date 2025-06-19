@@ -20,6 +20,9 @@ system_infos = {
 }
 
 def create_venv() -> None:
+    """
+    Creates a virtual environment for the program to run at.
+    """
     if not venv_dir.exists():
         logger.info("Creating virtual environment...")
         subprocess.check_call([sys.executable, "-m", "venv", str(venv_dir)])
@@ -44,6 +47,12 @@ def create_venv() -> None:
         logger.warn("requirements.txt not found.")
 
 def remove_venv() -> None:
+    """
+    Removes the virtual environment
+    Use case:
+        - Deinstallation
+        - Repair install
+    """
     if venv_dir.exists():
         logger.info(f"Removing virtual environment at: {venv_dir.resolve()}")
         shutil.rmtree(venv_dir)
@@ -52,6 +61,9 @@ def remove_venv() -> None:
         logger.info("No virtual environment to remove.")
 
 def print_system_info() -> None:
+    """
+    Prints the current system infos
+    """
     logger.info("System Info:")
     logger.info(f"System: {system_infos['system']}")
     logger.info(f"Release: {system_infos['release']}")
@@ -60,6 +72,15 @@ def print_system_info() -> None:
     logger.info(f"Python Version: {system_infos['python_version']}")
 
 def read_tested_systems_simple(file_path="tested_systems.yml") -> dict:
+    """
+    Returns the tested system specifications
+
+    Arguments:
+        Optional:
+            file_path (str): The path to the tested_systems.yml file.
+    Returns:
+        dict: The tested system specifications 
+    """
     tested = {}
     try:
         with open(file_path, "r") as f:
@@ -77,6 +98,9 @@ def read_tested_systems_simple(file_path="tested_systems.yml") -> dict:
     return tested
 
 def check_tested_systems() -> None:
+    """
+    Checks the system for compatibility and prints out a warning if it's not compatible
+    """
     tested = read_tested_systems_simple()
     if not tested:
         return
@@ -103,7 +127,7 @@ if __name__ == "__main__":
     finally:
         try:
             while True:
-                action = input("Create, delete or switch to environment (c/D): ")
+                action = input("Create or delete to environment (c/D): ")
                 if action == "c":
                     create_venv()
                     break

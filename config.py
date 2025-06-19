@@ -29,6 +29,9 @@ class Configuration:
                 self.__write_to_config(self.__missing_options)
 
     def __check_config_for_completeness(self) -> dict:
+        """
+        Check if config is not damaged
+        """
         missing = {}
         if 'config' not in config:
             config['config'] = {}
@@ -40,7 +43,13 @@ class Configuration:
 
         return missing
 
-    def __write_to_config(self, options: dict):
+    def __write_to_config(self, options: dict) -> None:
+        """
+        Takes a dict to write values to the config
+
+        Agruments:
+            options: dict
+        """
         if 'config' not in config:
             config['config'] = {}
 

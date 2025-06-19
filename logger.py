@@ -1,7 +1,13 @@
+"""
+The main file for the custom logger
+"""
 import sys
-from config import configuration as config
+from config import Configuration as config
 
 class Colors:
+    """
+    The main class for all color codes
+    """
     RESET = "\033[0m"
     INFO = "\033[94m"
     WARN = "\033[93m"
@@ -9,6 +15,9 @@ class Colors:
     ERROR = "\033[91m"
 
 class Logger:
+    """
+    The main class for the custom logger
+    """
     def __init__(self, stream=sys.stdout) -> None:
         self.__stream = stream
         self.debug_mode = config().get_debug_mode()

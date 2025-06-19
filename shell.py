@@ -2,5 +2,5 @@ from logger import Logger
 
 logger = Logger()
 
-if __name___ == "__main__":
+if __name__ == "__main__":
     pass

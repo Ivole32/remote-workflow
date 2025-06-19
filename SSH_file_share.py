@@ -3,7 +3,7 @@ import os
 
 logger = Logger()
 
-def generate_SSH_Key(ssh_dir=r".\.ssh"):
+def generate_SSH_Key(ssh_dir=r".\.ssh") -> None:
     logger.info("Generating SSH key pair...")
     if not os.path.exists(ssh_dir):
         logger.info("'.ssh' directory not found. Creating it now...")
