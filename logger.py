@@ -19,8 +19,19 @@ class Logger:
     """
     def __init__(self, debug_mode=True, stream=sys.stdout) -> None:
         self.__stream = stream
-        self.debug_mode = debug_mode
+        self.debug_mode = self.__get_debug_mode()
 
+    def __get_debug_mode(self) -> bool:
+        try:
+            with open(r".\config.ini", "r") as config:
+                content = config.read()
+                if "debug-mode = False" in content:
+                    return False
+                return True
+        except Exception:
+            return True
+
+        
     def info(self, message: str) -> None:
         if self.debug_mode:
             self._print_colored("[INFO]", message, Colors.INFO)
