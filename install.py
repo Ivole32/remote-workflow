@@ -19,7 +19,7 @@ system_infos = {
     "python_version": platform.python_version()
 }
 
-def create_venv():
+def create_venv() -> None:
     if not venv_dir.exists():
         logger.info("Creating virtual environment...")
         subprocess.check_call([sys.executable, "-m", "venv", str(venv_dir)])
@@ -43,7 +43,7 @@ def create_venv():
     else:
         logger.warn("requirements.txt not found.")
 
-def remove_venv():
+def remove_venv() -> None:
     if venv_dir.exists():
         logger.info(f"Removing virtual environment at: {venv_dir.resolve()}")
         shutil.rmtree(venv_dir)
@@ -51,7 +51,7 @@ def remove_venv():
     else:
         logger.info("No virtual environment to remove.")
 
-def print_system_info():
+def print_system_info() -> None:
     logger.info("System Info:")
     logger.info(f"System: {system_infos['system']}")
     logger.info(f"Release: {system_infos['release']}")
@@ -59,7 +59,7 @@ def print_system_info():
     logger.info(f"Architecture: {system_infos['architecture']}")
     logger.info(f"Python Version: {system_infos['python_version']}")
 
-def read_tested_systems_simple(file_path="tested_systems.yml"):
+def read_tested_systems_simple(file_path="tested_systems.yml") -> dict:
     tested = {}
     try:
         with open(file_path, "r") as f:
@@ -76,7 +76,7 @@ def read_tested_systems_simple(file_path="tested_systems.yml"):
 
     return tested
 
-def check_tested_systems():
+def check_tested_systems() -> None:
     tested = read_tested_systems_simple()
     if not tested:
         return
