@@ -1,5 +1,6 @@
 from logger import Logger
 import typer
+import os
 from rich import print
 
 logger = Logger()
@@ -9,12 +10,14 @@ app = typer.Typer()
 @app.command()
 def install() -> None:
     """Starts Installation"""
-    print("[blue]Started Installation[/blue]")
+    print("[blue]Starting Installation[/blue]")
+    os.system(r"python .\install.py")
 
 @app.command()
 def uninstall() -> None:
-    """Starts uninstallation"""
-    print("[blue]Started uninstallation[/blue]")
+    """Starts Installation"""
+    print("[blue]Starting uninstallation[/blue]")
+    os.system(r"python .\install.py")
 
 '''
 Examples:

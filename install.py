@@ -1,15 +1,8 @@
-import os
-import sys
-import subprocess
-import shutil
-from pathlib import Path
 import platform
+import os
 from logger import Logger
 
 logger = Logger()
-
-venv_dir = Path("remote-workflow")
-requirements_file = Path("requirements.txt")
 
 system_infos = {
     "system": platform.system(),
@@ -18,47 +11,6 @@ system_infos = {
     "architecture": platform.machine(),
     "python_version": platform.python_version()
 }
-
-def create_venv() -> None:
-    """
-    Creates a virtual environment for the program to run at.
-    """
-    if not venv_dir.exists():
-        logger.info("Creating virtual environment...")
-        subprocess.check_call([sys.executable, "-m", "venv", str(venv_dir)])
-        logger.ok(f"Virtual environment created at: {venv_dir.resolve()}")
-    else:
-        logger.info(f"Virtual environment already exists at: {venv_dir.resolve()}")
-
-    python_executable = (
-        venv_dir / "Scripts" / "python.exe" if os.name == "nt"
-        else venv_dir / "bin" / "python"
-    )
-
-    logger.info("Upgrading pip...")
-    subprocess.check_call([str(python_executable), "-m", "pip", "install", "--upgrade", "pip"])
-    logger.ok("pip upgraded.")
-
-    if requirements_file.exists():
-        logger.info("Installing packages from requirements.txt...")
-        subprocess.check_call([str(python_executable), "-m", "pip", "install", "-r", str(requirements_file)])
-        logger.ok("Packages installed.")
-    else:
-        logger.warn("requirements.txt not found.")
-
-def remove_venv() -> None:
-    """
-    Removes the virtual environment
-    Use case:
-        - Deinstallation
-        - Repair install
-    """
-    if venv_dir.exists():
-        logger.info(f"Removing virtual environment at: {venv_dir.resolve()}")
-        shutil.rmtree(venv_dir)
-        logger.ok("Virtual environment removed.")
-    else:
-        logger.info("No virtual environment to remove.")
 
 def print_system_info() -> None:
     """
@@ -118,23 +70,22 @@ def check_tested_systems() -> None:
         else:
             logger.ok(f"{key} matches ({actual})")
 
+def create_venv() -> None:
+    logger.info("Creating virtual envoirnement")
+    os.system("python -m venv remote-workflow")
+    os.system(r".\remote-workflow\Scripts\activate")
+    logger.ok("Virtual envoirnement created")
+    logger.info("Installing requirements")
+    os.system(r".\remote-workflow\Scripts\python.exe -m pip install --upgrade pip")
+    os.system(r".\remote-workflow\Scripts\pip.exe install -r requirements.txt")
+    logger.ok("Requirements installed")
+
 if __name__ == "__main__":
     try:
         print_system_info()
         check_tested_systems()
+        create_venv()
     except Exception as e:
         logger.error(f"Failed to display system information:\n{e}")
-    finally:
-        try:
-            while True:
-                action = input("Create or delete to environment (c/D): ")
-                if action == "c":
-                    create_venv()
-                    break
-                elif action == "D":
-                    remove_venv()
-                    break
-                else:
-                    logger.warn("Wrong action type...")
-        except Exception as e:
-            logger.error(f"Unknown error while handling virtual environment:\n{e}")
+
+# cmd /c mklink /J MeinJunction ZielOrdner

@@ -8,6 +8,8 @@ import os
 
 config = configparser.ConfigParser()
 
+config_path = r".\config.ini"
+
 class Configuration:
     """
     The main class for handeling configurations
@@ -26,13 +28,13 @@ class Configuration:
         }
 
         self.logger.info("Checking for existence of config.ini")
-        if not os.path.exists("config.ini"):
+        if not os.path.exists(config_path):
             self.logger.warn("config.ini was not found. Creating new config...")
             config['config'] = {}
             self.__write_to_config(self._config_options)
         else:
             self.logger.info("Configuration file found")
-            config.read("config.ini")
+            config.read(config_path)
             self.logger.info("Checking for config completeness...")
             self.__missing_options = self.__check_config_for_completeness()
             if self.__missing_options:
@@ -70,7 +72,7 @@ class Configuration:
             config['config'][key] = str(value)
             self.logger.ok(f"Wrote {key} : {value} to config.ini")
 
-        with open('config.ini', 'w') as configfile:
+        with open(config_path, 'w') as configfile:
             config.write(configfile)
             self.logger.info("Wrote everything to config.ini")
 

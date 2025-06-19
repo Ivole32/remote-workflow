@@ -2,6 +2,7 @@
 The main file for the custom logger
 """
 import sys
+from config import config_path
 
 class Colors:
     """
@@ -23,7 +24,7 @@ class Logger:
 
     def __get_debug_mode(self) -> bool:
         try:
-            with open(r".\config.ini", "r") as config:
+            with open(config_path, "r") as config:
                 content = config.read()
                 if "debug-mode = False" in content:
                     return False
