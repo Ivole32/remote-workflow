@@ -1,2 +1,3 @@
 /remote-workflow/
-/__pycache__
+/__pycache__/
+/.ssh/
