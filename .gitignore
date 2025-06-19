@@ -1,3 +1,4 @@
 /remote-workflow/
 /__pycache__/
+/.ssh/
 config.ini
