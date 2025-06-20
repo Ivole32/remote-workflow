@@ -1,9 +1,7 @@
 from logger import Logger
-from config import Configuration
 import customtkinter as ctk
 
-config = Configuration()
-logger = Logger(debug_mode=config.get_debug_mode())
+logger = Logger()
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")

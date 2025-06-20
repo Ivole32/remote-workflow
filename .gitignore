@@ -2,3 +2,5 @@
 /__pycache__/
 /.ssh/
 config.ini
+python.cmd
+python

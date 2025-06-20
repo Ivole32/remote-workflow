@@ -8,7 +8,7 @@ import os
 
 config = configparser.ConfigParser()
 
-config_path = r".\config.ini"
+config_path = r".\configuration\config.ini"
 
 class Configuration:
     """
