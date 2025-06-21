@@ -1,5 +1,5 @@
 import platform
-import subprocess
+import sys
 import os
 from logger import Logger
 from pathlib import Path
@@ -73,6 +73,14 @@ def check_tested_systems() -> None:
             logger.ok(f"{key} matches ({actual})")
 
 def create_symlink(target, link_name, is_dir=False):
+    """
+    Creates a symlink
+
+    Arguments:
+        target: str (the symlink target)
+        link_name: str (the symlink name)
+        is_dir: bool (Shows if the target is a dir)
+    """
     link_path = Path(link_name)
 
     if link_path.exists() or link_path.is_symlink():
@@ -85,6 +93,9 @@ def create_symlink(target, link_name, is_dir=False):
     logger.ok(f"Symlink created: {link_name} -> {target}")
 
 def create_venv() -> None:
+    """
+    Creates the virtual enviornement and installs requirements
+    """
     logger.info("Creating virtual envoirnement")
     os.system("python -m venv remote-workflow")
     os.system(r".\remote-workflow\Scripts\activate")
@@ -95,15 +106,23 @@ def create_venv() -> None:
     os.system(r".\remote-workflow\Scripts\pip.exe install -r requirements.txt")
     logger.ok("Requirements installed")
 
-    logger.info("Creating symlinks...")
+def create_python_start_file() -> None:
+    """
+    Creates a python start file
+    """
+    logger.info("Creating python.cmd")
     with open(r".\python.cmd", "w") as cmd_file:
         cmd_file.write(r"@echo off")
         cmd_file.write("\n")
         cmd_file.write(r".\remote-workflow\Scripts\python.exe %*")
+    logger.ok("python.cmd was craeted")
 
+def create_symlinks() -> None:
+    """
+    Creates all required symlinks
+    """
+    logger.info("Creating symlinks...")
     create_symlink(r".\python.cmd", r".\python", is_dir=False)
-
-    import sys
     create_symlink(f"{sys.executable}", r".\python_no_venv.exe", is_dir=False)
     logger.ok("Symlinks created")
 
@@ -112,5 +131,7 @@ if __name__ == "__main__":
         print_system_info()
         check_tested_systems()
         create_venv()
+        create_python_start_file()
+        create_symlinks()
     except Exception as e:
         logger.error(f"Error:\n{e}")

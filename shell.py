@@ -26,7 +26,7 @@ def uninstall() -> None:
     subprocess.Popen([r".\uninstall.cmd", rf"{full_path}", f"{pid}"])
 
 @app.command()
-def open_UI():
+def open_UI() -> None:
     """Opens the UI"""
     print("[blue]Opening UI...[/blue]")
     os.system(r".\python.exe .\UI.py")

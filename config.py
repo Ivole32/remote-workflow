@@ -86,6 +86,16 @@ class Configuration:
         return config.getboolean('config', 'debug-mode')
     
     def get_config_value(self, value=None, return_type=None) -> list:
+        """
+        Returns a specific value from the config
+
+        Arguments:
+            value: str (the value you want to get back)
+            return_type: any (the type the return of value should be formatted)
+
+        Returns:
+            list: [If the return type is right, the value]
+        """
         if return_type == None:
             return_type = str
             
