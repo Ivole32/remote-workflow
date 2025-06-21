@@ -4,3 +4,4 @@
 config.ini
 python.cmd
 python
+python_no_venv.exe

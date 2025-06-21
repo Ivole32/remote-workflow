@@ -1,4 +1,5 @@
 from logger import Logger
+import subprocess
 import typer
 import os
 from rich import print
@@ -19,29 +20,16 @@ def install() -> None:
 def uninstall() -> None:
     """Starts Installation"""
     print("[blue]Starting uninstallation[/blue]")
-    os.system(r"python .\install.py")
+
+    full_path = os.getcwd()
+    pid = os.getpid()
+    subprocess.Popen([r".\uninstall.cmd", rf"{full_path}", f"{pid}"])
 
 @app.command()
 def open_UI():
     """Opens the UI"""
     print("[blue]Opening UI...[/blue]")
     os.system(r".\python.exe .\UI.py")
-
-'''
-Examples:
-    @app.command()
-    def greet(name: str, loud: bool = False):
-        """Gibt einen freundlichen Gruß aus."""
-        msg = f"Hallo, {name}!"
-        if loud:
-            msg = msg.upper()
-        print(f"[green]{msg}[/green]")
-
-    @app.command()
-    def version():
-        """Zeigt die Version des Tools."""
-        print("[blue]Tool v1.0.0[/blue]")
-'''
 
 if __name__ == "__main__":
     app()

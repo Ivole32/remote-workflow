@@ -1,4 +1,5 @@
 import platform
+import subprocess
 import os
 from logger import Logger
 from pathlib import Path
@@ -81,30 +82,30 @@ def create_symlink(target, link_name, is_dir=False):
             link_path.unlink()
 
     os.symlink(target, link_name, target_is_directory=is_dir)
-    logger.ok(f"Symlink created: {link_name} → {target}")
+    logger.ok(f"Symlink created: {link_name} -> {target}")
 
 def create_venv() -> None:
-    # venv creation
     logger.info("Creating virtual envoirnement")
     os.system("python -m venv remote-workflow")
     os.system(r".\remote-workflow\Scripts\activate")
     logger.ok("Virtual envoirnement created")
 
-    # Install requirements to venv
     logger.info("Installing requirements")
     os.system(r".\remote-workflow\Scripts\python.exe -m pip install --upgrade pip")
     os.system(r".\remote-workflow\Scripts\pip.exe install -r requirements.txt")
     logger.ok("Requirements installed")
 
-    # Creat symlinks
-    logger.info("Creating symlink...")#
+    logger.info("Creating symlinks...")
     with open(r".\python.cmd", "w") as cmd_file:
         cmd_file.write(r"@echo off")
         cmd_file.write("\n")
         cmd_file.write(r".\remote-workflow\Scripts\python.exe %*")
 
     create_symlink(r".\python.cmd", r".\python", is_dir=False)
-    logger.ok("Symlink created")
+
+    import sys
+    create_symlink(f"{sys.executable}", r".\python_no_venv.exe", is_dir=False)
+    logger.ok("Symlinks created")
 
 if __name__ == "__main__":
     try:
@@ -112,4 +113,4 @@ if __name__ == "__main__":
         check_tested_systems()
         create_venv()
     except Exception as e:
-        logger.error(f"Failed to display system information:\n{e}")
+        logger.error(f"Error:\n{e}")
