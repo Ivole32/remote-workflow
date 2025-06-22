@@ -8,6 +8,9 @@ logger = Logger()
 config = Configuration()
 
 class SSH_Handler():
+    """
+    The main class to work with SSH
+    """
     def __init__(self) -> None:
         self.ssh_dir = config.get_config_value(value="ssh-file", return_type=str)[1]
         self.ssh_key_name = config.get_config_value(value="ssh-key-name", return_type=str)[1]
@@ -17,6 +20,12 @@ class SSH_Handler():
         self.pub_key_file = os.path.join(self.ssh_dir, f"{self.ssh_key_name}.pub")
 
     def generate_SSH_Key(self, overwrite=False) -> None:
+        """
+        Generates a new SSH key paire
+
+        Arguments:
+            overwrite: bool (If the function should overwrite old SSH key paires)
+        """
         if overwrite == True:
             logger.info("Deleting old SSH keys if there are some")
             shutil.rmtree(self.ssh_dir)
@@ -41,6 +50,9 @@ class SSH_Handler():
                 logger.info("Key files are already there. Use 'overwrite=True' to overwrite them...")
 
     def copy_SSH_key(self) -> None:
+        """
+        Copies the SSH key to the remote linux server to gain acces without password
+        """
         with open(self.pub_key_file, "r") as f:
             public_key = f.read()
 
@@ -61,6 +73,9 @@ class SSH_Handler():
             logger.ok("SSH key copied successfully.")
 
     def fix_windows_key_permissions(self) -> None:
+        """
+        Fixes the perminissions for the key files so the ssh commadn can work with them
+        """
         ssh_file = os.path.join(self.ssh_dir, self.ssh_key_name)
 
         if os.name != 'nt':
@@ -76,6 +91,12 @@ class SSH_Handler():
             logger.error(f"Windows key perminissions could not be fixed: {e}")
 
     def test_SSH_without_password(self) -> bool:
+        """
+        A function to test if the SSH connection without password works
+
+        Returns:
+            bool: If the connection worked without password
+        """
         ssh_file = os.path.join(self.ssh_dir, self.ssh_key_name)
         self.fix_windows_key_permissions()
         try:
