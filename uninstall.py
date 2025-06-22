@@ -20,8 +20,8 @@ def delete_venv() -> None:
     logger.ok("Envoirnement removed")
 
     logger.info("Deleting other files...")
-    os.system(r"del /f /q .\python")
-    os.system(r"del /f /q .\python.cmd")
+    delete_file(r".\python")
+    delete_file(r".\python.cmd")
     logger.ok("Other files were deleted")
     
     exit(0)
