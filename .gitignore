@@ -1,7 +1,7 @@
 /remote-workflow/
 /__pycache__/
 /.ssh/
-config.ini
+/configuration/
 python.cmd
 python
 python_no_venv.exe

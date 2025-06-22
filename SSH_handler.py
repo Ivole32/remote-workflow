@@ -90,6 +90,26 @@ class SSH_Handler():
         except Exception as e:
             logger.error(f"Windows key perminissions could not be fixed: {e}")
 
+    def send_ssh_command(self, command:list):
+        try:
+            result = subprocess.run(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=30
+            )
+
+            logger.info(f"SSH command returncode: {result.returncode}, stdout: {result.stdout.strip()}")
+            return result
+
+        except subprocess.TimeoutExpired:
+            logger.error("SSH connection timed out.")
+            return False
+        except Exception as e:
+            logger.error(f"Error sending SSH command: {e}")
+            return False
+
     def test_SSH_without_password(self) -> bool:
         """
         A function to test if the SSH connection without password works
@@ -99,25 +119,12 @@ class SSH_Handler():
         """
         ssh_file = os.path.join(self.ssh_dir, self.ssh_key_name)
         self.fix_windows_key_permissions()
-        try:
-            result = subprocess.run(
-                ["ssh", "-i", ssh_file, "-o", "BatchMode=yes", f"{self.ssh_user}@{self.ssh_ip}", "echo ok"],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                timeout=30
-            )
 
-            logger.info(f"SSH test returncode: {result.returncode}, stdout: {result.stdout.strip()}")
-            return result.returncode == 0 and "ok" in result.stdout.strip()
+        command = ["ssh", "-i", ssh_file, "-o", "BatchMode=yes", f"{self.ssh_user}@{self.ssh_ip}", "echo ok"]
 
-        except subprocess.TimeoutExpired:
-            logger.error("SSH connection timed out.")
-            return False
-        except Exception as e:
-            logger.error(f"Error testing SSH connection: {e}")
-            return False
-
+        self.result = self.send_ssh_command(command)
+        return self.result.returncode == 0 and "ok" in self.result.stdout.strip()
+        
 if __name__ == "__main__":
     handler = SSH_Handler()
     handler.generate_SSH_Key(overwrite=False)

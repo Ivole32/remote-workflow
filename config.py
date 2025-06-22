@@ -16,7 +16,7 @@ class Configuration:
     """
     def __init__(self) -> None:
         from logger import Logger
-        self.logger = Logger(debug_mode=True)
+        self.logger = Logger()
 
         self._config_options = {
             "debug-mode": True,
@@ -30,6 +30,7 @@ class Configuration:
         self.logger.info("Checking for existence of config.ini")
         if not os.path.exists(config_path):
             self.logger.warn("config.ini was not found. Creating new config...")
+            os.makedirs(config_path.replace(r"\config.ini", ""), exist_ok=True)
             config['config'] = {}
             self.__write_to_config(self._config_options)
         else:
@@ -41,7 +42,7 @@ class Configuration:
                 self.__write_to_config(self.__missing_options)
             self.logger.ok("Config is complete")
 
-        self.logger = Logger(debug_mode=self.get_debug_mode())
+        self.logger = Logger()
 
     def __check_config_for_completeness(self) -> dict:
         """
