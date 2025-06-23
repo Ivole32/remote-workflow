@@ -13,6 +13,7 @@ class SSH_Handler():
     """
     def __init__(self) -> None:
         self.remote_files = []
+        self.file_summary_build = False
 
         self.ssh_dir = config.get_config_value(value="ssh-file", return_type=str)[1]
         self.ssh_key_name = config.get_config_value(value="ssh-key-name", return_type=str)[1]
@@ -92,7 +93,7 @@ class SSH_Handler():
         except Exception as e:
             logger.error(f"Windows key perminissions could not be fixed: {e}")
 
-    def send_ssh_command(self, command:list):
+    def send_ssh_command(self, command:list) -> any:
         try:
             result = subprocess.run(
                 command,
@@ -126,22 +127,33 @@ class SSH_Handler():
 
         self.result = self.send_ssh_command(command)
         return self.result.returncode == 0 and "ok" in self.result.stdout.strip()
-    
-    def upload_file_to_remote(self, local_file:str, remote_path:str) -> None:
+
+    def __build_local_remote_file_summary(self) -> None:
+        if self.file_summary_build == False:
+            result = self.send_ssh_command(["ssh", "-i", self.ssh_file, "-o", "BatchMode=yes", f"{self.ssh_user}@{self.ssh_ip}", "ls"])
+            files = result.stdout.strip().split("\n")
+
+            for file in files:
+                self.remote_files.append(file)
+                
+            self.file_summary_build = True
+
+    def upload_file_to_remote(self, local_file:str, remote_file_name:str) -> None:
         """
         Uploades a file from the local system to the remote server
 
         Arguments:
             local_file: str (The path to the local file to upload)
-            remote_path: str (The path were the file should be uploaded)
+            remote_file_name: str (The name the file should be saved as)
         """
+        self.__build_local_remote_file_summary()
+
         logger.info(f"Uploading file: {local_file} to remote")
-        if os.system(rf"scp -P {self.ssh_port} -i {self.ssh_file} {local_file} {self.ssh_user}@{self.ssh_ip}:{remote_path}") == 0:
-            self.remote_files.append(remote_path)
+        if os.system(rf"scp -P {self.ssh_port} -i {self.ssh_file} {local_file} {self.ssh_user}@{self.ssh_ip}:{remote_file_name}") == 0:
+            self.remote_files.append(remote_file_name)
             logger.ok("File was uplouded successfully")
 
-    
-    def download_file_from_remote(self, remote_file: str, local_path: str) -> None:
+    def download_file_from_remote(self, remote_file_name: str, local_path: str) -> None:
         """
         Downloads a file from the remote server to the local system
 
@@ -149,12 +161,14 @@ class SSH_Handler():
             remote_file: str (The path to the file on the remote server)
             local_path: str (The path were the remote file should get downloaded)
         """
-        logger.info(f"Downloading file {remote_file} from remote")
-        if remote_file in self.remote_files:
-            os.system(rf"scp -P {self.ssh_port} -i {self.ssh_file} {self.ssh_user}@{self.ssh_ip}:{remote_file} {local_path}")
-            logger.ok(f"File: {remote_file} was downloaded successfully")
+        self.__build_local_remote_file_summary()
+
+        logger.info(f"Downloading file {remote_file_name} from remote")
+        if remote_file_name in self.remote_files:
+            os.system(rf"scp -P {self.ssh_port} -i {self.ssh_file} {self.ssh_user}@{self.ssh_ip}:{remote_file_name} {local_path}")
+            logger.ok(f"File: {remote_file_name} was downloaded successfully")
         else:
-            logger.error(f"File: {remote_file} not in the local remote file summary")
+            logger.error(f"File: {remote_file_name} not in the local remote file summary")
         
 if __name__ == "__main__":
     handler = SSH_Handler()
@@ -162,8 +176,8 @@ if __name__ == "__main__":
     while True:
         if handler.test_SSH_without_password():
             logger.ok("SSH connection OK")
-            handler.upload_file_to_remote(r".\README.md", "~/README2.md")
-            handler.download_file_from_remote("~/test.txt", ".")
+            handler.upload_file_to_remote(r".\README.md", "README2.md")
+            handler.download_file_from_remote("test.txt", ".")
             break
         else:
             handler.copy_SSH_key()
