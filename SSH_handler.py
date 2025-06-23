@@ -93,10 +93,19 @@ class SSH_Handler():
         except Exception as e:
             logger.error(f"Windows key perminissions could not be fixed: {e}")
 
-    def send_ssh_command(self, command:list) -> any:
+    def send_ssh_command(self, command:str) -> any:
+        """
+        Sends a SSH command to the remote server
+
+        Arguments:
+            command: str (The linux comand to execute on the server)
+        """
+
+        system_command = ["ssh", "-i", self.ssh_file, "-o", "BatchMode=yes", f"{self.ssh_user}@{self.ssh_ip}", command]
+
         try:
             result = subprocess.run(
-                command,
+                system_command,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
@@ -123,19 +132,19 @@ class SSH_Handler():
         self.ssh_file = os.path.join(self.ssh_dir, self.ssh_key_name)
         self.fix_windows_key_permissions()
 
-        command = ["ssh", "-i", self.ssh_file, "-o", "BatchMode=yes", f"{self.ssh_user}@{self.ssh_ip}", "echo ok"]
+        command = "echo ok"
 
         self.result = self.send_ssh_command(command)
         return self.result.returncode == 0 and "ok" in self.result.stdout.strip()
 
     def __build_local_remote_file_summary(self) -> None:
         if self.file_summary_build == False:
-            result = self.send_ssh_command(["ssh", "-i", self.ssh_file, "-o", "BatchMode=yes", f"{self.ssh_user}@{self.ssh_ip}", "ls"])
+            result = self.send_ssh_command("ls")
             files = result.stdout.strip().split("\n")
 
             for file in files:
                 self.remote_files.append(file)
-                
+
             self.file_summary_build = True
 
     def upload_file_to_remote(self, local_file:str, remote_file_name:str) -> None:
