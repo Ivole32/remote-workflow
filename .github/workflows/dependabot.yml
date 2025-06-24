@@ -1,0 +1,43 @@
+name: Update requirements.txt
+
+on:
+  schedule:
+    - cron: '0 0,12 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install --upgrade pip pipreqs
+
+      - name: Install requirements.txt
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Upgrade all packages
+        run: |
+          pip freeze | cut -d '=' -f 1 | xargs -n1 pip install -U
+          pip freeze > requirements.txt
+
+      - name: Commit and push changes
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: update requirements.txt"
+          branch: auto/update-requirements
+          title: "Update requirements.txt"
+          body: |
+            This pull request updates all packages in `requirements.txt` to their latest versions.
+          delete-branch: true

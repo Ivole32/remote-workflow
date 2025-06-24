@@ -126,8 +126,15 @@ def create_symlinks() -> None:
     create_symlink(f"{sys.executable}", r".\python_no_venv.exe", is_dir=False)
     logger.ok("Symlinks created")
 
+def print_version() -> None:
+    with open(r".\version.txt", "r") as version_file:
+        version = version_file.read()
+
+    logger.info(f"Installing remote workflow, version: {version}")
+
 if __name__ == "__main__":
     try:
+        print_version()
         print_system_info()
         check_tested_systems()
         create_venv()
