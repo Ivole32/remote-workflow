@@ -34,12 +34,13 @@ class Configuration:
         if not os.path.exists(config_path):
             self.logger.warn("config.ini was not found. Creating new config...")
             os.makedirs(config_path.replace(r"\config.ini", ""), exist_ok=True)
-            config['config'] = {}
+
             self.__write_to_config(self._config_options, topic="config")
             self.__write_to_config(self._ssh_options, topic="SSH")
         else:
             self.logger.info("Configuration file found")
             config.read(config_path)
+
             self.logger.info("Checking for config completeness...")
             topic, self.__missing_options = self.__check_config_for_completeness(self._config_options, topic="config")
             if self.__missing_options:
@@ -50,8 +51,6 @@ class Configuration:
                 self.__write_to_config(self.__missing_options, topic=topic)
                 
             self.logger.ok("Config is complete")
-
-        self.logger = Logger()
 
     def __check_config_for_completeness(self, check_dict, topic="config") -> dict:
         """

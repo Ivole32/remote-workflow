@@ -20,8 +20,7 @@ class SSH_Handler():
         self.ssh_port = config.get_config_value(value="ssh-port", topic="SSH", return_type=int)[1]
         self.ssh_ip = config.get_config_value(value="ssh-ip", topic="SSH", return_type=str)[1]
         self.ssh_user = config.get_config_value(value="ssh-user", topic="SSH", return_type=str)[1]
-        logger.error(f"{self.ssh_dir}")
-        logger.error(f"{self.ssh_key_name}")
+
         self.pub_key_file = os.path.join(self.ssh_dir, f"{self.ssh_key_name}.pub")
 
     def generate_SSH_Key(self, overwrite=False) -> None:
@@ -37,11 +36,12 @@ class SSH_Handler():
             logger.info("Generating new SSH key pair...")
             if not os.path.exists(self.ssh_dir):
                 logger.info("'.ssh' directory not found. Creating it now...")
-                os.makedirs(self.ssh_dir)
+                os.makedirs(self.ssh_dir, exist_ok=True)
             logger.info("Creating SSH key pair...")
             key_path = os.path.join(self.ssh_dir, self.ssh_key_name)
             os.system(rf'ssh-keygen -t rsa -b 4096 -f "{key_path}" -N ""')
             logger.ok("SSH key pair created successfully.")
+
         if overwrite == False:
             if not os.path.exists(self.ssh_dir):
                 logger.info("'.ssh' directory not found. Creating it now...")
@@ -71,7 +71,7 @@ class SSH_Handler():
             text=True
         )
 
-        stdout, stderr = proc.communicate(public_key)
+        _, stderr = proc.communicate(public_key)
         if proc.returncode != 0:
             logger.error(f"Error copying SSH key: {stderr}")
         else:
