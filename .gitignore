@@ -2,6 +2,5 @@
 /__pycache__/
 /.ssh/
 /configuration/
-python.cmd
 python
 python_no_venv.exe

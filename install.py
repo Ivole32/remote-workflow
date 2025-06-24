@@ -106,17 +106,6 @@ def create_venv() -> None:
     os.system(r".\remote-workflow\Scripts\pip.exe install -r requirements.txt")
     logger.ok("Requirements installed")
 
-def create_python_start_file() -> None:
-    """
-    Creates a python start file
-    """
-    logger.info("Creating python.cmd")
-    with open(r".\python.cmd", "w") as cmd_file:
-        cmd_file.write(r"@echo off")
-        cmd_file.write("\n")
-        cmd_file.write(r".\remote-workflow\Scripts\python.exe %*")
-    logger.ok("python.cmd was craeted")
-
 def create_symlinks() -> None:
     """
     Creates all required symlinks
@@ -138,7 +127,6 @@ if __name__ == "__main__":
         print_system_info()
         check_tested_systems()
         create_venv()
-        create_python_start_file()
         create_symlinks()
     except Exception as e:
         logger.error(f"Error:\n{e}")
