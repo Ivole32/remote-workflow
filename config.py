@@ -86,7 +86,7 @@ class Configuration:
         """
         return config.getboolean('config', 'debug-mode')
     
-    def get_config_value(self, value=None, return_type=None) -> list:
+    def get_config_value(self, value=None, topic="config", return_type=None) -> list:
         """
         Returns a specific value from the config
 

@@ -1,0 +1,25 @@
+name: Write Commit SHA to File
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  write-commit-id:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get latest commit SHA
+        run: echo "${{ github.sha }}" > version.txt
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add last_commit.txt
+          git commit -m "Update version.txt with latest commit SHA" || echo "No changes to commit"
+          git push
