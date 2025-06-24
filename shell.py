@@ -1,10 +1,12 @@
 from logger import Logger
+from config import Configuration
 import subprocess
 import typer
 import os
 from rich import print
 
 logger = Logger()
+config = Configuration()
 
 app = typer.Typer()
 
@@ -26,8 +28,23 @@ def uninstall() -> None:
     subprocess.Popen([r".\uninstall.cmd", rf"{full_path}", f"{pid}"])
 
 @app.command()
-def ssh_command() -> None:
-    pass
+def set_up_ssh() -> None:
+    """A command to set up SSH linking"""
+    options = ["ssh-user", "ssh-ip", "ssh-port", "ssh-file", "ssh-key-name"]
+    for option in options:
+        print(f"[blue]{option}[/blue]: ", end="")
+        value = input("")
+        config.write_to_config(option, value, "SSH")
+        
+    
+    """
+    Examples:
+    ssh-user = ivo
+    ssh-ip = 192.168.112.105
+    ssh-port = 22
+    ssh-file = .\.ssh
+    ssh-key-name = id_rsa
+    """
 
 @app.command()
 def open_UI() -> None:

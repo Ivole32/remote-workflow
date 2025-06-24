@@ -15,11 +15,13 @@ class SSH_Handler():
         self.remote_files = []
         self.file_summary_build = False
 
-        self.ssh_dir = config.get_config_value(value="ssh-file", return_type=str)[1]
-        self.ssh_key_name = config.get_config_value(value="ssh-key-name", return_type=str)[1]
-        self.ssh_port = config.get_config_value(value="ssh-port", return_type=int)[1]
-        self.ssh_ip = config.get_config_value(value="ssh-ip", return_type=str)[1]
-        self.ssh_user = config.get_config_value(value="ssh-user", return_type=str)[1]
+        self.ssh_dir = config.get_config_value(value="ssh-file", topic="SSH", return_type=str)[1]
+        self.ssh_key_name = config.get_config_value(value="ssh-key-name", topic="SSH", return_type=str)[1]
+        self.ssh_port = config.get_config_value(value="ssh-port", topic="SSH", return_type=int)[1]
+        self.ssh_ip = config.get_config_value(value="ssh-ip", topic="SSH", return_type=str)[1]
+        self.ssh_user = config.get_config_value(value="ssh-user", topic="SSH", return_type=str)[1]
+        logger.error(f"{self.ssh_dir}")
+        logger.error(f"{self.ssh_key_name}")
         self.pub_key_file = os.path.join(self.ssh_dir, f"{self.ssh_key_name}.pub")
 
     def generate_SSH_Key(self, overwrite=False) -> None:
