@@ -1,27 +1,30 @@
 from logger import Logger
-from config import Configuration
+import subprocess
 import os
 
+
 logger = Logger()
-config = Configuration()
 
 def update_repo() -> None:
     """
     Pulls the newest version of the project
     """
+    logger.info("Upgrading repo")
     os.system("git pull")
+    logger.ok("Repo upgraded")
 
 def create_venv() -> None:
     """
     Creates the virtual enviornement and installs requirements
     """
     logger.info("Creating virtual enviornement")
-    os.system(r".\python_no_venv.exe -m venv remote-workflow")
+    result = subprocess.run(["python", "-m", "venv", "remote-workflow"], capture_output=True, text=True)
+
     logger.ok("Virtual envoirnement created")
 
     logger.info("Installing requirements")
     os.system(r".\remote-workflow\Scripts\python.exe -m pip install --upgrade pip")
-    os.system(r".\remote-workflow\Scripts\pip.exe install -r requirements.txt")
+    os.system(r".\remote-workflow\Scripts\python.exe -m pip install -r requirements.txt")
     logger.ok("Requirements installed")
 
 def upgrade_venv() -> None:
@@ -35,7 +38,7 @@ def upgrade_venv() -> None:
 
     logger.info("Recreating venv")
     create_venv()
-    logger.ok("Venv recteated")
+    logger.ok("Venv recreated")
 
 if __name__ == "__main__":
     update_repo()

@@ -25,7 +25,12 @@ def uninstall() -> None:
 
     full_path = os.getcwd()
     pid = os.getpid()
-    subprocess.Popen([r".\uninstall.cmd", rf"{full_path}", f"{pid}"])
+    subprocess.run([r".\uninstall.cmd", rf"{full_path}", f"{pid}"])
+
+@app.command()
+def upgrade() -> None:
+    print("[blue]Starting upgrade[/blue]")
+    subprocess.run([r".\python_no_venv.exe", r".\upgrade.py"])
 
 @app.command()
 def set_up_ssh() -> None:
@@ -37,7 +42,7 @@ def set_up_ssh() -> None:
         config.write_to_config(option, value, "SSH")
         
     
-    """
+    r"""
     Examples:
     ssh-user = ivo
     ssh-ip = 192.168.112.105
