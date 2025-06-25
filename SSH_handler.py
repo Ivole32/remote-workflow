@@ -102,8 +102,8 @@ class SSH_Handler():
         Arguments:
             command: str (The linux comand to execute on the server)
         """
-
-        system_command = ["ssh", "-i", self.ssh_file, "-o", "BatchMode=yes", f"{self.ssh_user}@{self.ssh_ip}", command]
+        ssh_file = os.path.join(self.ssh_dir, self.ssh_key_name)
+        system_command = ["ssh", "-i", ssh_file, "-o", "BatchMode=yes", f"{self.ssh_user}@{self.ssh_ip}", command]
 
         try:
             result = subprocess.run(
@@ -160,7 +160,8 @@ class SSH_Handler():
         self.__build_local_remote_file_summary()
 
         logger.info(f"Uploading file: {local_file} to remote")
-        if os.system(rf"scp -P {self.ssh_port} -i {self.ssh_file} {local_file} {self.ssh_user}@{self.ssh_ip}:{remote_file_name}") == 0:
+        ssh_file = os.path.join(self.ssh_dir, self.ssh_key_name)
+        if os.system(rf"scp -P {self.ssh_port} -i {ssh_file} {local_file} {self.ssh_user}@{self.ssh_ip}:{remote_file_name}") == 0:
             self.remote_files.append(remote_file_name)
             logger.ok("File was uplouded successfully")
 
@@ -175,11 +176,11 @@ class SSH_Handler():
         self.__build_local_remote_file_summary()
 
         logger.info(f"Downloading file {remote_file_name} from remote")
-        if remote_file_name in self.remote_files:
-            os.system(rf"scp -P {self.ssh_port} -i {self.ssh_file} {self.ssh_user}@{self.ssh_ip}:{remote_file_name} {local_path}")
-            logger.ok(f"File: {remote_file_name} was downloaded successfully")
-        else:
-            logger.error(f"File: {remote_file_name} not in the local remote file summary")
+
+        ssh_file = os.path.join(self.ssh_dir, self.ssh_key_name)
+        os.system(rf"scp -P {self.ssh_port} -i {ssh_file} {self.ssh_user}@{self.ssh_ip}:{remote_file_name} {local_path}")
+        logger.ok(f"File: {remote_file_name} was downloaded successfully")
+
         
 if __name__ == "__main__":
     handler = SSH_Handler()
