@@ -29,6 +29,7 @@ def uninstall() -> None:
 
 @app.command()
 def upgrade() -> None:
+    """Upgrades the program"""
     print("[blue]Starting upgrade[/blue]")
     subprocess.run([r".\python_no_venv.exe", r".\upgrade.py"])
 
