@@ -36,21 +36,18 @@ def upgrade() -> None:
 @app.command()
 def set_up_ssh() -> None:
     """A command to set up SSH linking"""
-    options = ["ssh-user", "ssh-ip", "ssh-port", "ssh-file", "ssh-key-name"]
-    for option in options:
-        print(f"[blue]{option}[/blue]: ", end="")
-        value = input("")
+    options = {"ssh-user": [], "ssh-ip": [], "ssh-port": ["22"], "ssh-file": [r".\.ssh"], "ssh-key-name": ["id_rsa"]}
+    for option in options.keys():
+        if options[option] != []:
+            print(f"[blue]{option}[/blue] (default: {options[option][0]}): ", end="")
+            value = input("")
+            if value == "":
+                value = options[option][0]
+        else:
+            print(f"[blue]{option}[/blue]: ", end="")
+            value = input("")
+
         config.write_to_config(option, value, "SSH")
-        
-    
-    r"""
-    Examples:
-    ssh-user = ivo
-    ssh-ip = 192.168.112.105
-    ssh-port = 22
-    ssh-file = .\.ssh
-    ssh-key-name = id_rsa
-    """
 
 @app.command()
 def open_UI() -> None:
