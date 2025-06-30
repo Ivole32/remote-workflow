@@ -25,7 +25,7 @@ def uninstall() -> None:
 
     full_path = os.getcwd()
     pid = os.getpid()
-    subprocess.run([r".\uninstall.cmd", rf"{full_path}", f"{pid}"])
+    subprocess.Popen([r".\uninstall.cmd", rf"{full_path}", f"{pid}"])
 
 @app.command()
 def upgrade() -> None:

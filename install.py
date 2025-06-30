@@ -1,6 +1,7 @@
 import platform
 import sys
 import os
+import subprocess
 from logger import Logger
 from pathlib import Path
 
@@ -97,13 +98,13 @@ def create_venv() -> None:
     Creates the virtual enviornement and installs requirements
     """
     logger.info("Creating virtual envoirnement")
-    os.system("python -m venv remote-workflow")
-    os.system(r".\remote-workflow\Scripts\activate")
+    subprocess.run(["python", "-m", "venv", "remote-workflow"], check=True)
+    subprocess.run([r".\remote-workflow\Scripts\activate"], shell=True, check=True)
     logger.ok("Virtual envoirnement created")
 
     logger.info("Installing requirements")
-    os.system(r".\remote-workflow\Scripts\python.exe -m pip install --upgrade pip")
-    os.system(r".\remote-workflow\Scripts\pip.exe install -r requirements.txt")
+    subprocess.run([r".\remote-workflow\Scripts\python.exe", "-m", "pip", "install", "--upgrade", "pip"], check=True)
+    subprocess.run([r".\remote-workflow\Scripts\pip.exe", "install", "-r", "requirements.txt"], check=True)
     logger.ok("Requirements installed")
 
 def create_symlinks() -> None:
