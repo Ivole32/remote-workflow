@@ -1,6 +1,6 @@
 /remote-workflow/
 /__pycache__/
 /.ssh/
-/configuration/
+*configuration*
 python
 python_no_venv.exe
