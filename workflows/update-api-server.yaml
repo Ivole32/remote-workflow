@@ -1,0 +1,4 @@
+name: update-api-server
+
+run:
+  - git -C /root/api/Linux-API pull origin dev-testing

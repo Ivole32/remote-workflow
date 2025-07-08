@@ -61,7 +61,7 @@ class SSH_Handler():
         with open(self.pub_key_file, "r") as f:
             public_key = f.read()
 
-        command = "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+        command = f"mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo '{public_key}' >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
 
         proc = subprocess.Popen(
             ["ssh", f"{self.ssh_user}@{self.ssh_ip}", "-p", str(self.ssh_port), command],
