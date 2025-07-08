@@ -7,10 +7,3 @@ run:
     - apt autoremove -y
     - apt clean -y
     #- reboot
-
-- test workflow
-- python update workflow
-- pip packages update workflow
-- pip requirements install workflow
-
-+ Added explantion for every worklow on the top
