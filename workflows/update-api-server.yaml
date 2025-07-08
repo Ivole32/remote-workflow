@@ -1,3 +1,4 @@
+#A script to update a repository on the server to the newest version
 name: update-api-server
 
 run:

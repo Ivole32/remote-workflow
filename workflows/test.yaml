@@ -1,0 +1,11 @@
+#A test script to see if everything works
+name: test
+
+upload-files:
+    - .\version.txt
+
+run:
+  - echo "Server command ok!!!" > version.txt
+
+download-files:
+  - version.txt

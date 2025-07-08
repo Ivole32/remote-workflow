@@ -1,3 +1,4 @@
+#A script to backup specific files in a tar.gz archive
 name: backup
 
 run:

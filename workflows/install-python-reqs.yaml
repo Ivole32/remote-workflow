@@ -1,0 +1,8 @@
+#A script to install python requirements
+name: install-python-requirements
+
+upload-files:
+  - .\requirements.txt
+
+run:
+  - python3 -m pip install -r requirements.txt
