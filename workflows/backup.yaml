@@ -1,0 +1,8 @@
+name: backup
+
+run:
+  - mkdir -p /root/backup
+  - tar -czf /root/backup/backup.tar.gz /root /home /var
+
+download-files:
+  - /root/backup/backup.tar.gz

@@ -50,6 +50,13 @@ def set_up_ssh() -> None:
         config.write_to_config(option, value, "SSH")
 
 @app.command()
+def run_workflow(workflow_name: str) -> None:
+    """Runs a workflow by name"""
+    from workflow_handler import workflow_handler
+    handler = workflow_handler()
+    handler.run_workflow(workflow_name)
+
+@app.command()
 def set_up_workflow() -> None:
     """A command to set up the workflow"""
     pass

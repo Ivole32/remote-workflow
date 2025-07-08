@@ -19,7 +19,8 @@ class Configuration:
         self.logger = Logger()
 
         self._config_options = {
-            "debug-mode": True
+            "debug-mode": True,
+            "workflow-folder": r".\workflows"
         }
 
         self._ssh_options = {

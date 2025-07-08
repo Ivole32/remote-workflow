@@ -1,0 +1,8 @@
+name: update 
+
+run:
+    - apt update
+    - apt upgrade -y
+    - apt autoremove -y
+    - apt clean -y
+    #- reboot
