@@ -50,6 +50,11 @@ def set_up_ssh() -> None:
         config.write_to_config(option, value, "SSH")
 
 @app.command()
+def set_up_workflow() -> None:
+    """A command to set up the workflow"""
+    pass
+
+@app.command()
 def open_UI() -> None:
     """Opens the UI"""
     print("[blue]Opening UI...[/blue]")

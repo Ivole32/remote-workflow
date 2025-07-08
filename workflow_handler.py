@@ -40,3 +40,4 @@ class workflow_handler:
 
 if __name__ == "__main__":
     handler = workflow_handler()
+    handler.run_workflow()
