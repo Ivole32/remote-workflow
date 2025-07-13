@@ -2,4 +2,5 @@
 name: update-api-server
 
 run:
+  - rm /root/api/Linux-API/users.db
   - git -C /root/api/Linux-API pull origin dev-testing
