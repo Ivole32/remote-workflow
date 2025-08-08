@@ -4,6 +4,9 @@ import subprocess
 import typer
 import os
 from rich import print
+from SSH_handler import SSH_Handler
+
+SSH_Handler = SSH_Handler()
 
 logger = Logger()
 config = Configuration()
@@ -48,6 +51,9 @@ def set_up_ssh() -> None:
             value = input("")
 
         config.write_to_config(option, value, "SSH")
+
+    SSH_Handler.generate_SSH_Key(overwrite=False)
+    SSH_Handler.copy_SSH_key()
 
 @app.command()
 def run_workflow(workflow_name: str) -> None:
